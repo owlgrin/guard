@@ -1,0 +1,37 @@
+<?php
+
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
+
+class CreateGuardTable extends Migration {
+
+	/**
+	 * Run the migrations.
+	 *
+	 * @return void
+	 */
+	public function up()
+	{
+		Schema::create('_guard_permission_user_app', function(Blueprint $table)
+		{
+			$table->increments('id');
+			$table->string('user_id', 125);
+			$table->string('app_id', 125);
+			$table->tinyInteger('expiring_role')->nullable();
+			$table->tinyInteger('role');
+			$table->enum('action', array('created', 'collaborated'))->nullable();
+			$table->tinyInteger('status');
+			$table->timestamp('expired_at')->nullable();
+		});
+	}
+
+	/**
+	 * Reverse the migrations.
+	 *
+	 * @return void
+	 */
+	public function down()
+	{
+		Schema::drop('_guard_permission_user_app');
+	}
+}
