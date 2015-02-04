@@ -1,6 +1,7 @@
 <?php namespace Owlgrin\Guard;
 
 use Owlgrin\Guard\Storage\Storage as Guard;
+use Owlgrin\Guard\Exceptions as GuardExceptions;
 
 class GuardFilter {
 
@@ -25,6 +26,13 @@ class GuardFilter {
 			'contributor' => $this->roles['contributor'] | $this->roles['creator'],
 			'creator'     => $this->roles['creator']
 		);
+	}
+
+	public function filter($userId, $appId, $level)
+	{
+		// proceed only if input is present
+		if( ! $userId or ! $appId or ! $this->isAuthorized($userId, $appId, $level))
+			throw new GuardExceptions\ForbiddenException;
 	}
 
 	public function isAuthorized($userId, $appId, $level)
