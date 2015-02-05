@@ -19,7 +19,7 @@ class Guard {
 		return $this->storage->getRole($userId, $appId);
 	}
 
-	public function storeRole($userId, $appId, $role)
+	public function storeRole($userId, $appId, $role = '8')
 	{
 		$this->storage->storeRole($userId, $appId, $role);
 	}
