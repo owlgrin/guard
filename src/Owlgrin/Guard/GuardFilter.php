@@ -1,6 +1,6 @@
 <?php namespace Owlgrin\Guard;
 
-use Owlgrin\Guard\Storage\Storage as Guard;
+use Owlgrin\Guard\Storage\Storage;
 use Owlgrin\Guard\Exceptions as GuardExceptions;
 
 class GuardFilter {
@@ -9,7 +9,7 @@ class GuardFilter {
 	protected $roles;
 	protected $levels;
 
-	public function __construct(Guard $guard)
+	public function __construct(Storage $guard)
 	{
 		$this->guard = $guard;
 

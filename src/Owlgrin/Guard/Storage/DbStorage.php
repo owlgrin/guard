@@ -96,4 +96,23 @@ class DbStorage implements Storage {
 			throw new GuardExceptions\InternalException;
 		}
 	}
+
+	public function deleteRole($userId, $appId)
+	{
+		try
+		{
+			$this->db->table(Config::get('guard::tables.permission_user_app'))
+				->where('user_id', $userId)
+				->where('app_id', $appId)
+				->where('status', '1')
+				->update(array(
+					'expired_at'    => $this->db->raw('now()'),
+					'status'    	=> 0
+				));
+		}
+		catch(PDOException $e)
+		{
+			throw new GuardExceptions\InternalException;
+		}
+	}
 }

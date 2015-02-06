@@ -39,6 +39,8 @@ class GuardServiceProvider extends ServiceProvider {
 
 
 		$this->app->bind('Owlgrin\Guard\Storage\Storage', 'Owlgrin\Guard\Storage\DbStorage');
+
+		$this->app->singleton('guard', 'Owlgrin\Guard\Guard');
 	}
 
 	/**
