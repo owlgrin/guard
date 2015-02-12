@@ -16,9 +16,9 @@ class CreateGuardTable extends Migration {
 		{
 			$table->increments('id');
 			$table->string('user_id', 125);
-			$table->string('app_id', 125);
-			$table->tinyInteger('expiring_role')->nullable();
-			$table->tinyInteger('role');
+			$table->string('object_id', 125);
+			$table->tinyInteger('expiring_permission')->nullable();
+			$table->tinyInteger('permission');
 			$table->enum('action', array('created', 'collaborated'))->nullable();
 			$table->tinyInteger('status');
 			$table->timestamp('expired_at')->nullable();

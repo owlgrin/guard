@@ -14,34 +14,34 @@ class Guard {
 		$this->filter = $filter;
 	}
 
-	public function getRole($userId, $appId)
+	public function getPermission($userId, $objectId)
 	{
-		return $this->storage->getRole($userId, $appId);
+		return $this->storage->getPermission($userId, $objectId);
 	}
 
-	public function storeRole($userId, $appId, $role = '8')
+	public function storePermission($userId, $objectId, $permission = '8')
 	{
-		$this->storage->storeRole($userId, $appId, $role);
+		$this->storage->storePermission($userId, $objectId, $permission);
 	}
 
-	public function updateRoleForRestoredUser($userId)
+	public function updatePermissionForRestoredUser($userId)
 	{
-		$this->storage->updateRoleForRestoredUser($userId);
+		$this->storage->updatePermissionForRestoredUser($userId);
 	}
 
-	public function updateRoleForExpiredUser($userId)
+	public function updatePermissionForExpiredUser($userId)
 	{
-		$this->storage->updateRoleForExpiredUser($userId);
+		$this->storage->updatePermissionForExpiredUser($userId);
 	}
 
-	public function filter($userId, $appId, $level)
+	public function filter($userId, $objectId, $level)
 	{
-		$this->filter->filter($userId, $appId, $level);
+		$this->filter->filter($userId, $objectId, $level);
 	}
 
-	public function deleteRole($userId, $appId)
+	public function deletePermission($userId, $objectId)
 	{
-		$this->storage->deleteRole($userId, $appId);
+		$this->storage->deletePermission($userId, $objectId);
 	}
 
 }

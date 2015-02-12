@@ -16,18 +16,18 @@ class DbStorage implements Storage {
 		$this->db = $db->connection('mysql');
 	}
 
-	public function getRole($userId, $appId)
+	public function getPermission($userId, $objectId)
 	{
 		try
 		{
-			$role = $this->db->table(Config::get('guard::tables.permission_user_app'))
+			$permission = $this->db->table(Config::get('guard::tables.permission_user_app'))
 				->where('user_id', $userId)
-				->where('app_id', $appId)
+				->where('object_id', $objectId)
 				->where('status', '1')
-				->select('role')
+				->select('permission')
 				->first();
 
-			return $role;
+			return $permission;
 		}
 		catch(PDOException $e)
 		{
@@ -35,19 +35,19 @@ class DbStorage implements Storage {
 		}
 	}
 
-	public function storeRole($userId, $appId, $role = '8')
+	public function storePermission($userId, $objectId, $permission = '8')
 	{
 		try
 		{
-			if( $role != '8' and $role != '4')
-				throw new GuardExceptions\InvalidInputException('Invalid role ' . $role . ' is passed. Only 8 or 4 is valid.');
+			if( $permission != '8' and $permission != '4')
+				throw new GuardExceptions\InvalidInputException('Invalid permission ' . $permission . ' is passed. Only 8 or 4 is valid.');
 
 			$this->db->table(Config::get('guard::tables.permission_user_app'))->insertGetId(array(
 					'user_id'       => $userId,
-					'app_id'        => $appId,
-					'expiring_role' => null,
-					'role'          => $role,
-					'action'        => $this->actions[$role],
+					'object_id'        => $objectId,
+					'expiring_permission' => null,
+					'permission'          => $permission,
+					'action'        => $this->actions[$permission],
 					'status'        => '1',
 					'expired_at'    => null
 				)
@@ -59,7 +59,7 @@ class DbStorage implements Storage {
 		}
 	}
 
-	public function updateRoleForRestoredUser($userId)
+	public function updatePermissionForRestoredUser($userId)
 	{
 		try
 		{
@@ -67,8 +67,8 @@ class DbStorage implements Storage {
 				->where('user_id', $userId)
 				->where('status', '1')
 				->update(array(
-					'role'          => $this->db->raw('expiring_role'),
-					'expiring_role' => null,
+					'permission'          => $this->db->raw('expiring_permission'),
+					'expiring_permission' => null,
 					'expired_at'    => null
 				));
 		}
@@ -78,7 +78,7 @@ class DbStorage implements Storage {
 		}
 	}
 
-	public function updateRoleForExpiredUser($userId)
+	public function updatePermissionForExpiredUser($userId)
 	{
 		try
 		{
@@ -86,8 +86,8 @@ class DbStorage implements Storage {
 				->where('user_id', $userId)
 				->where('status', '1')
 				->update(array(
-					'expiring_role' => $this->db->raw('role'),
-					'role'          => 2,
+					'expiring_permission' => $this->db->raw('permission'),
+					'permission'          => 2,
 					'expired_at'    => $this->db->raw('now()')
 				));
 		}
@@ -97,13 +97,13 @@ class DbStorage implements Storage {
 		}
 	}
 
-	public function deleteRole($userId, $appId)
+	public function deletePermission($userId, $objectId)
 	{
 		try
 		{
 			$this->db->table(Config::get('guard::tables.permission_user_app'))
 				->where('user_id', $userId)
-				->where('app_id', $appId)
+				->where('object_id', $objectId)
 				->where('status', '1')
 				->update(array(
 					'expired_at'    => $this->db->raw('now()'),

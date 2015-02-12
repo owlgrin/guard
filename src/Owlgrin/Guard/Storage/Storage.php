@@ -2,8 +2,8 @@
 
 interface Storage {
 
-	public function getRole($userId, $appId);
-	public function storeRole($userId, $appId, $action);
-	public function updateRoleForRestoredUser($userId);
-	public function updateRoleForExpiredUser($userId);
+	public function getPermission($userId, $objectId);
+	public function storePermission($userId, $objectId, $action);
+	public function updatePermissionForRestoredUser($userId);
+	public function updatePermissionForExpiredUser($userId);
 }

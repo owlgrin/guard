@@ -6,14 +6,14 @@ use Owlgrin\Guard\Exceptions as GuardExceptions;
 class GuardFilter {
 
 	protected $guard;
-	protected $roles;
+	protected $permissions;
 	protected $levels;
 
 	public function __construct(Storage $guard)
 	{
 		$this->guard = $guard;
 
-		$this->roles = array(
+		$this->permissions = array(
 			'guest'       => 1,
 			'subscriber'  => 2,
 			'contributor' => 4,
@@ -21,29 +21,29 @@ class GuardFilter {
 		);
 
 		$this->levels = array(
-			'public'      => $this->roles['guest'] | $this->roles['subscriber'] | $this->roles['contributor'] | $this->roles['creator'],
-			'subscriber'  => $this->roles['subscriber'] | $this->roles['contributor'] | $this->roles['creator'],
-			'contributor' => $this->roles['contributor'] | $this->roles['creator'],
-			'creator'     => $this->roles['creator']
+			'public'      => $this->permissions['guest'] | $this->permissions['subscriber'] | $this->permissions['contributor'] | $this->permissions['creator'],
+			'subscriber'  => $this->permissions['subscriber'] | $this->permissions['contributor'] | $this->permissions['creator'],
+			'contributor' => $this->permissions['contributor'] | $this->permissions['creator'],
+			'creator'     => $this->permissions['creator']
 		);
 	}
 
-	public function filter($userId, $appId, $level)
+	public function filter($userId, $objectId, $level)
 	{
 		// proceed only if input is present
-		if( ! $userId or ! $appId or ! $this->isAuthorized($userId, $appId, $level))
+		if( ! $userId or ! $objectId or ! $this->isAuthorized($userId, $objectId, $level))
 			throw new GuardExceptions\ForbiddenException;
 	}
 
-	public function isAuthorized($userId, $appId, $level)
+	public function isAuthorized($userId, $objectId, $level)
 	{
 		if($level == 'public') return true; // if public, return true
 
-		$role = $this->guard->getRole($userId, $appId);
+		$permission = $this->guard->getPermission($userId, $objectId);
 
-		if(! $role) return false; // if no role, return false
+		if(! $permission) return false; // if no permission, return false
 
-		if(($this->levels[$level] & $role['role']) !== 0) return true; // if authorized, return true
+		if(($this->levels[$level] & $permission['permission']) !== 0) return true; // if authorized, return true
 
 		return false;
 	}
